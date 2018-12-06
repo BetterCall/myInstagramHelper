@@ -21,8 +21,8 @@ from instapy import InstaPy
 from instapy.util import smart_run
 
 # login credentials
-insta_username = 'username'
-insta_password = 'password'
+insta_username = sys.argv[1]
+insta_password = sys.argv[2]
 
 # restriction data
 dont_likes = ['#sex','#nude','#naked','#gun','#pussy']
