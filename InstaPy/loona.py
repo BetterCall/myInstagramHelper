@@ -66,15 +66,13 @@ def interact():
     with smart_run(session):
         try:
             # settings
-            session.set_quota_supervisor(
-              enabled=True,
-              sleep_after=["likes", "follows"],
-              sleepyhead=True,
-              stochastic_flow=True,
-              notify_me=True,
-              peak_likes=(100, 1000),
-              peak_comments=(21, 250),
-              peak_follows=(200, None) )
+            #session.set_quota_supervisor(
+              #enabled=True,
+              #sleep_after=["likes"],
+              #sleepyhead=True,
+              #stochastic_flow=True,
+              #notify_me=True,
+              #peak_likes=(100, 1000))
 
             session.set_dont_include( friends )
             session.set_dont_like( dont_likes )
@@ -198,7 +196,7 @@ def xunfollow():
 # schedulers
 schedule.every().day.at("7:30").do(interact)
 schedule.every().day.at("13:30").do(interact)
-schedule.every().day.at("18:35").do(interact)
+schedule.every().day.at("18:44").do(interact)
 
 #schedule.every().day.at("00:05").do(unfollow)
 
