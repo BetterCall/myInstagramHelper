@@ -51,44 +51,10 @@ comments = ['comment1', 'comment2', 'comment3']
 
 
 def get_session():
+
     session = InstaPy(username=insta_username,
-                      password=insta_password,
-                      headless_browser=False,
-                      nogui=True,
-                      multi_logs=False)
-
-    session.set_quota_supervisor(
-      enabled=True,
-      sleep_after=["likes", "follows"],
-      sleepyhead=True,
-      stochastic_flow=True,
-      notify_me=True,
-      peak_likes=(100, 1000),
-      peak_comments=(21, 250),
-      peak_follows=(200, None) )
-
-    session.set_dont_include( friends )
-    session.set_dont_like( dont_likes )
-    session.set_ignore_if_contains(ignore_list)
-    session.set_ignore_users(ignore_users)
-    session.set_simulation(enabled=False)
-    session.set_relationship_bounds( enabled=True,
-                                   potency_ratio=None,
-                                   delimit_by_numbers=True,
-                                    max_followers=7500,
-                                    max_following=900,
-                                    min_followers=25,
-                                    min_following=25,
-                                    min_posts=2 )
-
-    session.set_skip_users( skip_no_profile_pic=True )
-
-    session.set_user_interact( amount=5, randomize=True, percentage=80, media='Photo' )
-    session.set_do_like( enabled=True, percentage=100 )
-    session.set_do_comment(enabled=False, percentage=1)
-    #session.set_comments([comments], media='Photo')
-    session.set_do_follow(enabled=False, percentage=5, times=1)
-
+                  password=insta_password,
+                  headless_browser=False)
 
     return session
 
@@ -96,19 +62,56 @@ def get_session():
 def interact():
     # get a session!
     session = get_session()
+    # let's go!
+    with smart_run(session):
+        try:
+            # settings
+            session.set_quota_supervisor(
+              enabled=True,
+              sleep_after=["likes", "follows"],
+              sleepyhead=True,
+              stochastic_flow=True,
+              notify_me=True,
+              peak_likes=(100, 1000),
+              peak_comments=(21, 250),
+              peak_follows=(200, None) )
 
-    number = random.randint(5, 9)
-    random_targets = targets
+            session.set_dont_include( friends )
+            session.set_dont_like( dont_likes )
+            session.set_ignore_if_contains(ignore_list)
+            session.set_ignore_users(ignore_users)
+            session.set_simulation(enabled=False)
+            session.set_relationship_bounds( enabled=True,
+                                           potency_ratio=None,
+                                           delimit_by_numbers=True,
+                                            max_followers=7500,
+                                            max_following=900,
+                                            min_followers=25,
+                                            min_following=25,
+                                            min_posts=2 )
 
-    if len(targets) <= number:
-        random_targets = targets
+            session.set_skip_users( skip_no_profile_pic=True )
 
-    else:
-        random_targets = random.sample(targets, number)
+            session.set_user_interact( amount=5, randomize=True, percentage=80, media='Photo' )
+            session.set_do_like( enabled=True, percentage=100 )
+            session.set_do_comment(enabled=False, percentage=1)
+            #session.set_comments([comments], media='Photo')
+            session.set_do_follow(enabled=False, percentage=5, times=1)
 
+            # actions
+            number = random.randint(5, 9)
+            random_targets = targets
 
-    # Interact with the chosen targets...
-    session.interact_user_followers(random_targets, amount=random.randint(30,60), randomize=True)
+            if len(targets) <= number:
+                random_targets = targets
+
+            else:
+                random_targets = random.sample(targets, number)
+            # Interact with the chosen targets...
+            session.interact_user_followers(random_targets, amount=random.randint(30,60), randomize=True)
+
+        except Exception:
+            print(traceback.format_exc())
 
 
 def follow():
@@ -119,6 +122,8 @@ def follow():
 
     # get a session!
     session = get_session()
+
+
 
     # let's go!
     with smart_run(session):
@@ -132,11 +137,7 @@ def follow():
                 session.set_relationship_bounds(enabled=True, potency_ratio=1.21)
 
                 # activity
-                session.follow_by_tags(['tehran','تهران'], amount=5)
-                session.follow_user_followers(['donya', 'arat.gym'], amount=5, randomize=False)
-                session.follow_by_tags(['کادو','سالن','فروشگاه','زنانه','فشن','میکاپ','پوست','زیبا'], amount=10)
-                session.follow_by_tags(['لاغری','خرید_آنلاین','کافی_شاپ','گل'], amount=5)
-                session.unfollow_users(amount=25, allFollowing=True, style="LIFO", unfollow_after=3*60*60, sleep_delay=450)
+
 
             except Exception:
                 print(traceback.format_exc())
@@ -197,13 +198,11 @@ def xunfollow():
 # schedulers
 schedule.every().day.at("7:30").do(interact)
 schedule.every().day.at("13:30").do(interact)
-schedule.every().day.at("17:37").do(interact)
+schedule.every().day.at("17:55").do(interact)
 
 #schedule.every().day.at("00:05").do(unfollow)
 
 #schedule.every().wednesday.at("03:00").do(xunfollow)
-
-
 while True:
     schedule.run_pending()
     time.sleep(1)
